@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quotes",
+  "info": {
+    "singularName": "quote",
+    "pluralName": "quotes",
+    "displayName": "Quote",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quote": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "book": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::book.book"
+    },
+    "page": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "text",
+      "maxLength": 1000
+    },
+    "private": {
+      "type": "boolean",
+      "default": false
+    },
+    "likes": {
+      "type": "json"
+    },
+    "requotes": {
+      "type": "json"
+    },
+    "requote": {
+      "type": "string"
+    }
+  }
+}

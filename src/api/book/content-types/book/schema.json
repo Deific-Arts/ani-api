@@ -4,15 +4,22 @@
   "info": {
     "singularName": "book",
     "pluralName": "books",
-    "displayName": "Books"
+    "displayName": "Book",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "ISBN13": {
-      "type": "string"
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "identifier": {
+      "type": "string",
+      "required": true,
+      "unique": true
     }
   }
 }

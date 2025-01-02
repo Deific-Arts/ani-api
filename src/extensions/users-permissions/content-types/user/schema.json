@@ -69,6 +69,27 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::book.book"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "bio": {
+      "type": "text"
+    },
+    "following": {
+      "type": "json"
     }
   }
 }

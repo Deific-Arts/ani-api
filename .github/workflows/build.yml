@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
           DATABASE_FILENAME=${{ secrets.STRAPI_DATABASE_FILENAME }}
           JWT_SECRET=${{ secrets.STRAPI_JWT_SECRET }}
           EOL
-          sudo npm install
+          npm install
           npm run build
           pm2 start ecosystem.config.js
           EOF

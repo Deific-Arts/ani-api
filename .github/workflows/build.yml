@@ -31,6 +31,9 @@ jobs:
           EOF
       - name: Build and Start New
         working-directory: ./
+        env:
+          NODE_ENV: production
+          DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
@@ -53,7 +56,7 @@ jobs:
           DATABASE_PORT=${{ secrets.STRAPI_DATABASE_PORT }}
           DATABASE_NAME=${{ secrets.STRAPI_DATABASE_NAME }}
           DATABASE_USERNAME=${{ secrets.STRAPI_DATABASE_USERNAME }}
-          DATABASE_PASSWORD="${{ secrets.STRAPI_DATABASE_PASSWORD }}"
+          DATABASE_PASSWORD=$DATABASE_PASSWORD
           DATABASE_SSL=${{ secrets.STRAPI_DATABASE_SSL }}
           DATABASE_SSL_REJECT_UNAUTHORIZED=${{ secrets.STRAPI_DATABASE_SSL_REJECT_UNAUTHORIZED }}
           DATABASE_FILENAME=${{ secrets.STRAPI_DATABASE_FILENAME }}

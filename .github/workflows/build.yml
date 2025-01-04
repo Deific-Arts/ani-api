@@ -17,7 +17,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "Host *" >> ~/.ssh/config
           echo "    StrictHostKeyChecking no" >> ~/.ssh/config
-          apt install sshpass
+          sudo apt install sshpass
 
       - name: Stop and Remove Previous
         working-directory: ./

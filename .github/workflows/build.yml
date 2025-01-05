@@ -33,7 +33,23 @@ jobs:
         working-directory: ./
         env:
           NODE_ENV: production
+          APP_URL: ${{ secrets.STRAPI_APP_URL }}
+          HOST: ${{ secrets.STRAPI_HOST }}
+          PORT: ${{ secrets.STRAPI_PORT }}
+          APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
+          API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
+          ADMIN_JWT_SECRET: ${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
+          TRANSFER_TOKEN_SALT: ${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+          DATABASE_CLIENT: ${{ secrets.STRAPI_DATABASE_CLIENT }}
+          DATABASE_HOST: ${{ secrets.STRAPI_DATABASE_HOST }}
+          DATABASE_PORT: ${{ secrets.STRAPI_DATABASE_PORT }}
+          DATABASE_NAME: ${{ secrets.STRAPI_DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.STRAPI_DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
+          DATABASE_SSL: ${{ secrets.STRAPI_DATABASE_SSL }}
+          DATABASE_SSL_REJECT_UNAUTHORIZED: ${{ secrets.STRAPI_DATABASE_SSL_REJECT_UNAUTHORIZED }}
+          DATABASE_FILENAME: ${{ secrets.STRAPI_DATABASE_FILENAME }}
+          JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
@@ -43,24 +59,24 @@ jobs:
           cat > .env <<EOL
           NODE_ENV=production
           # Server
-          HOST=${{ secrets.STRAPI_HOST }}
-          PORT=${{ secrets.STRAPI_PORT }}
+          HOST=$HOST
+          PORT=$PORT
           # Secrets
-          APP_KEYS=${{ secrets.STRAPI_APP_KEYS }}
-          API_TOKEN_SALT=${{ secrets.STRAPI_API_TOKEN_SALT }}
-          ADMIN_JWT_SECRET=${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
-          TRANSFER_TOKEN_SALT=${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+          APP_KEYS=$APP_KEYS
+          API_TOKEN_SALT=$API_TOKEN_SALT
+          ADMIN_JWT_SECRET=$ADMIN_JWT_SECRET
+          TRANSFER_TOKEN_SALT=$TRANSFER_TOKEN_SALT
           # Database
-          DATABASE_CLIENT=${{ secrets.STRAPI_DATABASE_CLIENT }}
-          DATABASE_HOST=${{ secrets.STRAPI_DATABASE_HOST }}
-          DATABASE_PORT=${{ secrets.STRAPI_DATABASE_PORT }}
-          DATABASE_NAME=${{ secrets.STRAPI_DATABASE_NAME }}
-          DATABASE_USERNAME=${{ secrets.STRAPI_DATABASE_USERNAME }}
+          DATABASE_CLIENT=$DATABASE_CLIENT
+          DATABASE_HOST=$DATABASE_HOST
+          DATABASE_PORT=$DATABASE_PORT
+          DATABASE_NAME=$DATABASE_NAME
+          DATABASE_USERNAME=$DATABASE_USERNAME
           DATABASE_PASSWORD=$DATABASE_PASSWORD
-          DATABASE_SSL=${{ secrets.STRAPI_DATABASE_SSL }}
-          DATABASE_SSL_REJECT_UNAUTHORIZED=${{ secrets.STRAPI_DATABASE_SSL_REJECT_UNAUTHORIZED }}
-          DATABASE_FILENAME=${{ secrets.STRAPI_DATABASE_FILENAME }}
-          JWT_SECRET=${{ secrets.STRAPI_JWT_SECRET }}
+          DATABASE_SSL=$DATABASE_SSL
+          DATABASE_SSL_REJECT_UNAUTHORIZED=$DATABASE_SSL_REJECT_UNAUTHORIZED
+          DATABASE_FILENAME=$DATABASE_FILENAME
+          JWT_SECRET=$JWT_SECRET
           EOL
           npm install
           npm run build

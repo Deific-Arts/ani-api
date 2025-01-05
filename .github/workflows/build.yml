@@ -59,6 +59,7 @@ jobs:
           cat > .env <<EOL
           NODE_ENV=production
           # Server
+          APP_URL=$APP_URL
           HOST=$HOST
           PORT=$PORT
           # Secrets

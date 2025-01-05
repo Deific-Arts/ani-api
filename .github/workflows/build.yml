@@ -50,6 +50,9 @@ jobs:
           DATABASE_SSL_REJECT_UNAUTHORIZED: ${{ secrets.STRAPI_DATABASE_SSL_REJECT_UNAUTHORIZED }}
           DATABASE_FILENAME: ${{ secrets.STRAPI_DATABASE_FILENAME }}
           JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
+          CLOUDINARY_NAME: ${{ secrets.STRAPI_CLOUDINARY_NAME }}
+          CLOUDINARY_KEY: ${{ secrets.STRAPI_CLOUDINARY_KEY }}
+          CLOUDINARY_SECRET: ${{ secrets.STRAPI_CLOUDINARY_SECRET }}
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
@@ -57,7 +60,7 @@ jobs:
           git clone git@github.com:Deific-Arts/ani-api.git
           cd ~/sites/ani-api
           cat > .env <<EOL
-          NODE_ENV=production
+          # NODE_ENV=production // TODO:disabling for now to fix Google oAuth bug, it's probably important to make sure this works tho
           # Server
           APP_URL=$APP_URL
           HOST=$HOST
@@ -78,6 +81,9 @@ jobs:
           DATABASE_SSL_REJECT_UNAUTHORIZED=$DATABASE_SSL_REJECT_UNAUTHORIZED
           DATABASE_FILENAME=$DATABASE_FILENAME
           JWT_SECRET=$JWT_SECRET
+          CLOUDINARY_NAME=$CLOUDINARY_NAME
+          CLOUDINARY_KEY=$CLOUDINARY_KEY
+          CLOUDINARY_SECRET=$CLOUDINARY_SECRET
           EOL
           npm install
           npm run build

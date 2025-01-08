@@ -9,6 +9,7 @@
     "develop": "strapi develop",
     "seed:example": "node ./scripts/seed.js",
     "start": "strapi start",
+    "start:webhook": "stripe listen --forward-to localhost:1337/api/qenna/webhook",
     "strapi": "strapi"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
+    "stripe": "^17.5.0",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {

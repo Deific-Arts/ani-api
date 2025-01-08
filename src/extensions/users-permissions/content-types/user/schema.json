@@ -90,6 +90,9 @@
     },
     "following": {
       "type": "json"
+    },
+    "memberId": {
+      "type": "string"
     }
   }
 }

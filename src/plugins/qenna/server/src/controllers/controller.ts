@@ -38,22 +38,24 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     response.send({clientSecret: session.client_secret})
   },
   async createPortalSession(ctx) {
-    const body = JSON.parse(ctx.request.body);
-    const response = ctx.response;
-    const { session_id } = body;
+    const { member_id } = JSON.parse(ctx.request.body);
 
-    const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+    try {
+      const session = await stripe.billingPortal.sessions.create({
+        customer: member_id,
+        return_url: `${uiURL}/profile`,
+      });
 
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: checkoutSession.customer as string,
-      return_url: uiURL,
-    });
-
-    response.send({
-      id: portalSession.id,
-      url: portalSession.url,
-      customer: portalSession.customer,
-    })
+      ctx.send({
+        url: session.url,
+      }, 200);
+    } catch {
+      ctx.send({
+        error: {
+          message: 'There was a problem creating your portal session.Please contact support at contact@deificarts.com'
+        }
+      }, 400)
+    }
   },
 
   async createMembership(ctx) {

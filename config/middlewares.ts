@@ -28,8 +28,6 @@ export default [
     name: "strapi::body",
     config: {
       includeUnparsed: true,
-      patchKoa: true,
-      multipart: true,
     },
   },
   'strapi::session',

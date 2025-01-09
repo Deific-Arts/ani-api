@@ -93,6 +93,10 @@
     },
     "memberId": {
       "type": "string"
+    },
+    "memberFreePass": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

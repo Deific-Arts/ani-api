@@ -1050,6 +1050,8 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    memberFreePass: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     memberId: Schema.Attribute.String;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &

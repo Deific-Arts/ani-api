@@ -53,7 +53,10 @@ jobs:
           CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
-
+          STRAPI_ADMIN_API_TOKEN: ${{ secrets.STRAPI_ADMIN_API_TOKEN }}
+          STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY }}
+          STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"

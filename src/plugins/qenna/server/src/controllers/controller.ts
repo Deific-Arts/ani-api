@@ -2,12 +2,19 @@ import type { Core } from '@strapi/strapi';
 import Stripe from 'stripe';
 
 const uiURL = strapi.config.get('plugin::qenna.config.ui_url') || process.env.UI_URL;
-const environment = strapi.config.get('plugin::qenna.config.environment') || process.env.NODE_ENV;
-const test_key = strapi.config.get('plugin::qenna.config.test_key') || process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
-const live_key = strapi.config.get('plugin::qenna.config.live_key') || process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
-const isProduction = environment === "production";
-const mode = isProduction ? test_key: live_key;
-const stripe = new Stripe(mode as string);
+let _stripe: Stripe | null = null;
+
+const getStripe = () => {
+  const environment = strapi.config.get('plugin::qenna.config.environment') || process.env.NODE_ENV;
+  const test_key = strapi.config.get('plugin::qenna.config.test_key') || process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+  const live_key = strapi.config.get('plugin::qenna.config.live_key') || process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+  const isProduction = environment === "production";
+  const mode = isProduction ? test_key: live_key;
+
+  if (!_stripe) {
+    return new Stripe(mode as string);
+  }
+}
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   index(ctx) {
@@ -20,12 +27,12 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     const request = ctx.request;
     const response = ctx.response;
 
-    const prices = await stripe.prices.list({
+    const prices = await getStripe().prices.list({
       lookup_keys: [request.body.lookup_key],
       expand: ['data.product',]
     });
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       line_items: [
         {
           price: prices.data[0].id,
@@ -44,7 +51,7 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     const { member_id } = JSON.parse(ctx.request.body);
 
     try {
-      const session = await stripe.billingPortal.sessions.create({
+      const session = await getStripe().billingPortal.sessions.create({
         customer: member_id,
         return_url: `${uiURL}/profile`,
       });
@@ -65,7 +72,7 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     const { session_id, user_id, jwt } = body;
 
     try {
-      const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+      const checkoutSession = await getStripe().checkout.sessions.retrieve(session_id);
       const memberId = checkoutSession.customer;
 
       await fetch(`${process.env.APP_URL}/api/users/${user_id}`, {
@@ -91,14 +98,14 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async cancelMembership(ctx) {
     const { member_id } = ctx.request.body;
-    const subscriptions = await stripe.subscriptions.list({
+    const subscriptions = await getStripe().subscriptions.list({
       customer: member_id
     });
 
     try {
       const subscriptionIds = subscriptions.data.map(subscription => subscription.id);
       subscriptionIds.forEach(async subscriptionId => {
-        await stripe.subscriptions.cancel(subscriptionId);
+        await getStripe().subscriptions.cancel(subscriptionId);
       });
       ctx.send({ message: 'OK' }, 200);
     } catch (error) {

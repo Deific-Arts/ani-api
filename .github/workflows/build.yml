@@ -34,6 +34,7 @@ jobs:
         env:
           NODE_ENV: production
           APP_URL: ${{ secrets.STRAPI_APP_URL }}
+          UI_URL: ${{ secrets.STRAPI_UI_URL }}
           HOST: ${{ secrets.STRAPI_HOST }}
           PORT: ${{ secrets.STRAPI_PORT }}
           APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
@@ -67,6 +68,7 @@ jobs:
           NODE_ENV=production
           # Server
           APP_URL=$APP_URL
+          UI_URL=$UI_URL
           HOST=$HOST
           PORT=$PORT
           # Secrets
@@ -91,7 +93,7 @@ jobs:
           EOL
           cd ./src/plugins/qenna
           npm install
-          npm run build
+          NODE_ENV=production UI_URL=$UI_URL STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY=$STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY=$STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY npm run build
           cd ../../../
           npm install
           npm run build

@@ -1,6 +1,6 @@
 import { resolve } from "path";
 
-export default ({ env}) => ({
+export default ({ env }) => ({
   qenna: {
     enabled: true,
     resolve: './src/plugins/qenna',

@@ -3,9 +3,6 @@ import Stripe from 'stripe';
 
 const isProduction = process.env.NODE_ENV === "production";
 const uiURL = process.env.UI_URL;
-const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY || 'test_key';
-const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY || 'live_key';
-const stripe = new Stripe(isProduction ? test_key : live_key);
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   index(ctx) {
@@ -15,6 +12,10 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
       .getWelcomeMessage();
   },
   async createCheckoutSession(ctx) {
+    const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+    const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+    const stripe = new Stripe(isProduction ? test_key : live_key);
+
     const request = ctx.request;
     const response = ctx.response;
 
@@ -39,6 +40,9 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     response.send({clientSecret: session.client_secret})
   },
   async createPortalSession(ctx) {
+    const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+    const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+    const stripe = new Stripe(isProduction ? test_key : live_key);
     const { member_id } = JSON.parse(ctx.request.body);
 
     try {
@@ -59,6 +63,9 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async createMembership(ctx) {
+    const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+    const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+    const stripe = new Stripe(isProduction ? test_key : live_key);
     const body = JSON.parse(ctx.request.body);
     const { session_id, user_id, jwt } = body;
 
@@ -88,6 +95,9 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async cancelMembership(ctx) {
+    const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+    const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+    const stripe = new Stripe(isProduction ? test_key : live_key);
     const { member_id } = ctx.request.body;
     const subscriptions = await stripe.subscriptions.list({
       customer: member_id

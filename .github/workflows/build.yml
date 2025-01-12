@@ -53,6 +53,7 @@ jobs:
           CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
@@ -85,8 +86,12 @@ jobs:
           CLOUDINARY_KEY=$CLOUDINARY_KEY
           CLOUDINARY_SECRET=$CLOUDINARY_SECRET
           EOL
+          cd ./src/plugins/qenna
+          npm install
+          npm run build
+          cd ../../../
           npm install
           npm run build
           pm2 start ecosystem.config.js
           EOF
-      
+

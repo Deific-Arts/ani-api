@@ -2,8 +2,10 @@ import type { Core } from '@strapi/strapi';
 import Stripe from 'stripe';
 
 const isProduction = process.env.NODE_ENV === "production";
-const stripe = new Stripe(isProduction ? process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY : process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY);
 const uiURL = process.env.UI_URL;
+const test_key = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY || 'test_key';
+const live_key = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY || 'live_key';
+const stripe = new Stripe(isProduction ? test_key : live_key);
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   index(ctx) {

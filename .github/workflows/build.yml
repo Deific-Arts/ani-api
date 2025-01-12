@@ -32,7 +32,7 @@ jobs:
       - name: Build and Start New
         working-directory: ./
         env:
-          NODE_ENV: production
+          # NODE_ENV: production // TODO:disabling for now to fix Google oAuth bug, it's probably important to make sure this works tho
           APP_URL: ${{ secrets.STRAPI_APP_URL }}
           HOST: ${{ secrets.STRAPI_HOST }}
           PORT: ${{ secrets.STRAPI_PORT }}

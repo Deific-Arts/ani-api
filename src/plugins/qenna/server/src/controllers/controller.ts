@@ -1,11 +1,13 @@
 import type { Core } from '@strapi/strapi';
 import Stripe from 'stripe';
 
-const isProduction = process.env.NODE_ENV === "production";
-const uiURL = process.env.UI_URL;
-const test_key = `${process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY}`;
-const live_key = `${process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY}`;
-const stripe = new Stripe(isProduction ? test_key : live_key);
+const uiURL = strapi.config.get('qenna.ui_url') || process.env.UI_URL;
+const environment = strapi.config.get('qenna.environment') || process.env.NODE_ENV;
+const test_key = strapi.config.get('qenna.test_key') || process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+const live_key = strapi.config.get('qenna.live_key') || process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+const isProduction = environment === "production";
+const mode = isProduction ? test_key: live_key;
+const stripe = new Stripe(mode as string);
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   index(ctx) {

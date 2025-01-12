@@ -32,7 +32,7 @@ jobs:
       - name: Build and Start New
         working-directory: ./
         env:
-          # NODE_ENV: production // TODO:disabling for now to fix Google oAuth bug, it's probably important to make sure this works tho
+          NODE_ENV: production
           APP_URL: ${{ secrets.STRAPI_APP_URL }}
           HOST: ${{ secrets.STRAPI_HOST }}
           PORT: ${{ secrets.STRAPI_PORT }}
@@ -64,7 +64,7 @@ jobs:
           git clone git@github.com:Deific-Arts/ani-api.git
           cd ~/sites/ani-api
           cat > .env <<EOL
-          # NODE_ENV=production // TODO:disabling for now to fix Google oAuth bug, it's probably important to make sure this works tho
+          NODE_ENV=production
           # Server
           APP_URL=$APP_URL
           HOST=$HOST

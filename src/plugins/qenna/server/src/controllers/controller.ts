@@ -9,7 +9,6 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   index(ctx) {
     ctx.body = strapi
       .plugin('qenna')
-      // the name of the service file & the method.
       .service('service')
       .getWelcomeMessage();
   },
@@ -49,11 +48,10 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
       ctx.send({
         url: session.url,
       }, 200);
-    } catch {
+    } catch (error) {
       ctx.send({
-        error: {
-          message: 'There was a problem creating your portal session.Please contact support at contact@deificarts.com'
-        }
+        error,
+        message: 'There was a problem creating your portal session. Please contact support at contact@deificarts.com'
       }, 400)
     }
   },
@@ -87,6 +85,26 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     }
   },
 
+  async cancelMembership(ctx) {
+    const { member_id } = ctx.request.body;
+    const subscriptions = await stripe.subscriptions.list({
+      customer: member_id
+    });
+
+    try {
+      const subscriptionIds = subscriptions.data.map(subscription => subscription.id);
+      subscriptionIds.forEach(async subscriptionId => {
+        await stripe.subscriptions.cancel(subscriptionId);
+      });
+      ctx.send({ message: 'OK' }, 200);
+    } catch (error) {
+      ctx.send({
+        error,
+        message: 'There was a problem canceling your membership. Please contact support at contact@deificarts.com',
+      }, 400);
+    }
+
+  },
   webhook(ctx) {
     let event = ctx.request.body;
 

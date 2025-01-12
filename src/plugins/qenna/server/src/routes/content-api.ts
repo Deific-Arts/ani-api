@@ -21,6 +21,11 @@ export default [
   },
   {
     method: 'POST',
+    path: '/cancel-membership',
+    handler: 'controller.cancelMembership',
+  },
+  {
+    method: 'POST',
     path: '/webhook',
     handler: 'controller.webhook',
   }

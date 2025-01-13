@@ -99,6 +99,6 @@ jobs:
           cd ../../../
           npm install
           npm run build
-          pm2 start "npm run start" --name "anibookquotes"
+          pm2 start "npm start" --name "anibookquotes"
           EOF
 

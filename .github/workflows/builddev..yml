@@ -1,0 +1,103 @@
+name: build
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "Host *" >> ~/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+          sudo apt install sshpass
+
+      - name: Stop and Remove Previous
+        working-directory: ./
+        run: |
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
+          echo "Running commands on VPS"
+          cd ~/sites/ani-api-dev
+          pm2 stop ecosystem.config.js
+          cd ~/sites
+          rimraf ~/sites/ani-api-dev
+          EOF
+      - name: Build and Start New
+        working-directory: ./
+        env:
+          NODE_ENV: development
+          APP_URL: ${{ secrets.STRAPI_APP_URL_DEV }}
+          UI_URL: ${{ secrets.STRAPI_UI_URL_DEV }}
+          HOST: ${{ secrets.STRAPI_HOST }}
+          PORT: ${{ secrets.STRAPI_PORT }}
+          APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
+          API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
+          ADMIN_JWT_SECRET: ${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
+          TRANSFER_TOKEN_SALT: ${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+          DATABASE_CLIENT: ${{ secrets.STRAPI_DATABASE_CLIENT }}
+          DATABASE_HOST: ${{ secrets.STRAPI_DATABASE_HOST }}
+          DATABASE_PORT: ${{ secrets.STRAPI_DATABASE_PORT }}
+          DATABASE_NAME: ${{ secrets.STRAPI_DATABASE_NAME_DEV }}
+          DATABASE_USERNAME: ${{ secrets.STRAPI_DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.STRAPI_DATABASE_PASSWORD }}
+          DATABASE_SSL: ${{ secrets.STRAPI_DATABASE_SSL }}
+          DATABASE_SSL_REJECT_UNAUTHORIZED: ${{ secrets.STRAPI_DATABASE_SSL_REJECT_UNAUTHORIZED }}
+          DATABASE_FILENAME: ${{ secrets.STRAPI_DATABASE_FILENAME }}
+          JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
+          CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
+          CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
+          CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+          STRAPI_ADMIN_API_TOKEN: ${{ secrets.STRAPI_ADMIN_API_TOKEN }}
+          STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY }}
+          STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        run: |
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
+          echo "Running commands on VPS"
+          cd ~/sites
+          git clone git@github.com:Deific-Arts/ani-api.git ani-api-dev --branch develop
+          cd ~/sites/ani-api-dev
+          cat > .env <<EOL
+          NODE_ENV=development
+          # Server
+          APP_URL=$APP_URL
+          UI_URL=$UI_URL
+          HOST=$HOST
+          PORT=$PORT
+          # Secrets
+          APP_KEYS=$APP_KEYS
+          API_TOKEN_SALT=$API_TOKEN_SALT
+          ADMIN_JWT_SECRET=$ADMIN_JWT_SECRET
+          TRANSFER_TOKEN_SALT=$TRANSFER_TOKEN_SALT
+          # Database
+          DATABASE_CLIENT=$DATABASE_CLIENT
+          DATABASE_HOST=$DATABASE_HOST
+          DATABASE_PORT=$DATABASE_PORT
+          DATABASE_NAME=$DATABASE_NAME
+          DATABASE_USERNAME=$DATABASE_USERNAME
+          DATABASE_PASSWORD=$DATABASE_PASSWORD
+          DATABASE_SSL=$DATABASE_SSL
+          DATABASE_SSL_REJECT_UNAUTHORIZED=$DATABASE_SSL_REJECT_UNAUTHORIZED
+          JWT_SECRET=$JWT_SECRET
+          CLOUDINARY_NAME=$CLOUDINARY_NAME
+          CLOUDINARY_KEY=$CLOUDINARY_KEY
+          CLOUDINARY_SECRET=$CLOUDINARY_SECRET
+          STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY=$STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY
+          STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY=$STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY
+          EOL
+          cd ./src/plugins/qenna
+          npm install
+          npm run build
+          cd ../../../
+          npm install
+          npm run build
+          pm2 start ecosystem.config.js
+          EOF
+

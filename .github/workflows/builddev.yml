@@ -36,7 +36,7 @@ jobs:
           APP_URL: ${{ secrets.STRAPI_APP_URL_DEV }}
           UI_URL: ${{ secrets.STRAPI_UI_URL_DEV }}
           HOST: ${{ secrets.STRAPI_HOST }}
-          PORT: ${{ secrets.STRAPI_PORT }}
+          PORT: ${{ secrets.STRAPI_PORT_DEV }}
           APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
           API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
           ADMIN_JWT_SECRET: ${{ secrets.STRAPI_ADMIN_JWT_SECRET }}

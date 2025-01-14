@@ -62,7 +62,7 @@ jobs:
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
           cd ~/sites
-          git clone git@github.com:Deific-Arts/ani-api.git
+          git clone git@github.com:Deific-Arts/ani-api.git --branch main
           cd ~/sites/ani-api
           cat > .env <<EOL
           NODE_ENV=production

@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import Stripe from 'stripe';
+import nodemailer from 'nodemailer';
 
 const uiURL = strapi.config.get('plugin::qenna.config.ui_url') || process.env.UI_URL;
 let _stripe: Stripe | null = null;
@@ -26,9 +27,10 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   async createCheckoutSession(ctx) {
     const request = ctx.request;
     const response = ctx.response;
+    const body = JSON.parse(request.body);
 
     const prices = await getStripe().prices.list({
-      lookup_keys: [request.body.lookup_key],
+      lookup_keys: [body.lookup_key],
       expand: ['data.product',]
     });
 
@@ -39,7 +41,7 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
           quantity: 1,
         },
       ],
-      customer_email: request.body.email,
+      customer_email: body.email,
       mode: 'subscription',
       ui_mode: "embedded",
       return_url: `${uiURL}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -116,6 +118,7 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     }
 
   },
+
   webhook(ctx) {
     let event = ctx.request.body;
 
@@ -140,14 +143,9 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     let subscription;
     let status;
 
+    console.log('hmmm', event.type);
+
     switch (event.type) {
-      case 'customer.subscription.trial_will_end':
-        subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription trial ending.
-        // handleSubscriptionTrialEnding(subscription);
-        break;
       case 'customer.subscription.deleted':
         subscription = event.data.object;
         status = subscription.status;
@@ -155,27 +153,37 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
         // Then define and call a method to handle the subscription deleted.
         // handleSubscriptionDeleted(subscriptionDeleted);
         break;
-      case 'customer.subscription.created':
+      case 'checkout.session.completed':
         subscription = event.data.object;
         status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        break;
-      case 'customer.subscription.updated':
-        subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription update.
-        // handleSubscriptionUpdated(subscription);
-        break;
-      case 'entitlements.active_entitlement_summary.updated':
-        subscription = event.data.object;
-        console.log(`Active entitlement summary updated for ${subscription}.`);
-        // Then define and call a method to handle active entitlement summary updated
-        // handleEntitlementUpdated(subscription);
+
+        const transporter = nodemailer.createTransport({
+          host: "smtp.titan.email",
+          port: 587,
+          secure: false,
+          auth: {
+            user: "donotreply@deificarts.com",
+            pass: process.env.MAIL_PASSWORD,
+          },
+        });
+
+        async function sendMailCheckoutCompleted() {
+          const customerDetails = event.data.object.customer_details
+          const info = await transporter.sendMail({
+            from: '"Deific Arts LLC" <donotreply@deificarts.com>',
+            to: customerDetails.email,
+            subject: `${customerDetails.name}, you are now a member of Ani.`,
+            text: "Thanks for purchasing a membership. You now have access to the full capabilities of Ani Book Quotes.", // plain text body
+            html: "<p>Thanks for purchasing a membership. You now have access to the full capabilities of Ani Book Quotes.</p>", // html body
+          });
+
+          console.log("Message sent: %s", info.messageId);
+        }
+
+        sendMailCheckoutCompleted().catch(console.error);
         break;
       default:
-        // Unexpected event type
-        console.log(`Unhandled event type ${event.type}.`);
+        console.log(`Unhandled event type: ${event.type}.`);
     }
 
     ctx.send({
@@ -185,3 +193,5 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
 });
 
 export default controller;
+
+

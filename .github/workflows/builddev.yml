@@ -4,7 +4,7 @@ on:
     branches:
       - develop
 jobs:
-  build:
+  build-dev:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,6 +58,7 @@ jobs:
           STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY }}
           STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY: ${{ secrets.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           echo "Running commands on VPS"
@@ -92,6 +93,7 @@ jobs:
           CLOUDINARY_SECRET=$CLOUDINARY_SECRET
           STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY=$STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY
           STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY=$STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY
+          MAIL_PASSWORD=$MAIL_PASSWORD
           EOL
           cd ./src/plugins/qenna
           npm install

@@ -8,9 +8,9 @@
     "deploy": "strapi deploy",
     "develop": "strapi develop",
     "seed:example": "node ./scripts/seed.js",
+    "strapi": "strapi",
     "start": "strapi start",
-    "start:webhook": "stripe listen --forward-to localhost:1337/api/qenna/webhook",
-    "strapi": "strapi"
+    "stripe:webhook": "stripe listen --forward-to http://localhost:1337/api/qenna/webhook"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.6.0",
@@ -20,6 +20,7 @@
     "better-sqlite3": "11.3.0",
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",
+    "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"

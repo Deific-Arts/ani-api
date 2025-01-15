@@ -9,7 +9,7 @@ const getStripe = () => {
   const environment = strapi.config.get('plugin::qenna.config.environment') || process.env.NODE_ENV;
   const test_key = strapi.config.get('plugin::qenna.config.test_key') || process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
   const live_key = strapi.config.get('plugin::qenna.config.live_key') || process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
-  const isProduction = environment === "production";
+  const isProduction = environment === "prod";
   const mode = isProduction ? test_key: live_key;
 
   if (!_stripe) {

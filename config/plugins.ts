@@ -1,5 +1,3 @@
-import { resolve } from "path";
-
 export default ({ env }) => ({
   qenna: {
     enabled: true,
@@ -23,6 +21,23 @@ export default ({ env }) => ({
         upload: {},
         uploadStream: {},
         delete: {},
+      },
+    },
+  },
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: env('SMTP_HOST', 'smtp.titan.email'),
+        port: env('SMTP_PORT', 587),
+        auth: {
+          user: 'donotreply@deificarts.com',
+          pass: env('MAIL_PASSWORD'),
+        },
+      },
+      settings: {
+        defaultFrom: 'donotreply@deificarts.com',
+        defaultReplyTo: 'donotreply@deificarts.com',
       },
     },
   },

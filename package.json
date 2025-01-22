@@ -1,16 +1,20 @@
 {
   "name": "ani-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "The API Layer for Ani",
   "scripts": {
     "build": "strapi build",
+    "build:all": "strapi build && cd src/plugins/qenna && npm run build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
     "seed:example": "node ./scripts/seed.js",
     "strapi": "strapi",
     "start": "strapi start",
-    "stripe:webhook": "stripe listen --forward-to http://localhost:1337/api/qenna/webhook"
+    "stripe:login": "stripe login",
+    "stripe:listen": "stripe listen --forward-to http://localhost:1337/api/qenna/webhook",
+    "stripe:trigger:checkout-session-completed": "stripe trigger checkout.session.completed",
+    "watch": "npm run build:all && concurrently \"npm run develop\" \"npm run stripe:listen\" \"cd src/plugins/qenna && npm run watch\""
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.6.0",

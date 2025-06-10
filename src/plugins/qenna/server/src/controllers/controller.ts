@@ -143,15 +143,11 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
     let subscription;
     let status;
 
-    console.log('hmmm', event.type);
-
     switch (event.type) {
       case 'customer.subscription.deleted':
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription deleted.
-        // handleSubscriptionDeleted(subscriptionDeleted);
         break;
       case 'checkout.session.completed':
         subscription = event.data.object;

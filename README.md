@@ -1,61 +1,25 @@
-# 🚀 Getting started with Strapi
+# 🚀 Getting started 
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+This project includes a custom Plugin named Qenna. Qenna is a Stripe integration for Ani. It allows you to create subscriptions and manage subscriptions using the Stripe API. To build and run a watcher for both base Strapi and Qenna, use the `npm run watch` command. 
 
-### `develop`
+To test webhooks you'll need login with Stripe every 30 days with `npm run stripe:login`.
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
 
-```
-npm run develop
-# or
-yarn develop
-```
+## Testing Payments
 
-### `start`
+Use the following fake credit card info to test payment scenarios.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+Payment succeeds
+4242 4242 4242 4242
 
-```
-npm run start
-# or
-yarn start
-```
+Payment requires authentication
+4000 0025 0000 3155
 
-### `build`
+Payment is declined
+4000 0000 0000 9995
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-```
-npm run build
-# or
-yarn build
-```
+## Useful Links
 
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+* https://strapi.io/blog/how-to-build-your-first-strapi-5-plugin
+* https://docs.stripe.com/checkout/embedded/quickstart
